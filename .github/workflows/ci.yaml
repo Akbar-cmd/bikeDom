@@ -7,7 +7,7 @@ on:
     branches: [ main, dev ]
 
 env:
-  IMAGE_NAME_HTTP: "akbae/ci-http"  # Ваше имя образа в Docker Hub
+  IMAGE_NAME_GRPC: "akbae/ci-grpc"  # Ваше имя образа в Docker Hub
   REGISTRY: "docker.io"    # Реестр Docker Hub
   COMPOSE_PROJECT_NAME: "ci-app"  # Имя проекта Docker Compose
   SSH_DIR: "~/ci-app"      # Директория на сервере
@@ -34,7 +34,7 @@ jobs:
         run: |
           TAG_NAME=$(echo $GITHUB_SHA | head -c7)
           docker buildx create --use
-          docker buildx build --no-cache --push --tag $REGISTRY/$IMAGE_NAME:$TAG_NAME -f Dockerfile .
+          docker buildx build --no-cache --push --tag $REGISTRY/$IMAGE_NAME_GRPC:$TAG_NAME -f Dockerfile .
           
       
 
@@ -62,13 +62,13 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,CONTAINER_NAME
+          envs: IMAGE_NAME_GRPC,REGISTRY,GITHUB_SHA,CONTAINER_NAME
           script: |
             cd ${{ env.SSH_DIR }}
             TAG_NAME=$(echo $GITHUB_SHA | head -c7)
             
             # Обновляем образ в docker-compose.yml
-            sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG_NAME|g" docker-compose.yml
+            sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPC }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPCE }}:$TAG_NAME|g" docker-compose.yml
             
             # Создаем сеть 
             docker network create grpc-network >/dev/null 2>&1 || true
@@ -77,8 +77,8 @@ jobs:
             docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ env.REGISTRY }}
             
             # Получаем новые образы и перезапускаем сервисы
-            docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} pull http-server
-            docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} up -d --force-recreate http-server
+            docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} pull grpc-server
+            docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} up -d --force-recreate grpc-server
             
             # Проверяем статус
             sleep 10
