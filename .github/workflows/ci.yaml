@@ -9,7 +9,7 @@ on:
 env:
   IMAGE_NAME_GRPC: "akbae/ci-grpc"  # Ваше имя образа в Docker Hub
   REGISTRY: "docker.io"    # Реестр Docker Hub
-  COMPOSE_PROJECT_NAME: "ci-app"  # Имя проекта Docker Compose
+  COMPOSE_PROJECT_NAME: "ci-app-grpc"  # Имя проекта Docker Compose
   SSH_DIR: "~/ci-app"      # Директория на сервере
 
 jobs:
@@ -71,7 +71,7 @@ jobs:
             sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPC }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPC }}:$TAG_NAME|g" docker-compose.yml
             
             # Создаем сеть 
-            docker network create grpc-network >/dev/null 2>&1 || true
+            docker network create grpc-network >/dev/null 2>&1 || docker network create grpc-network
             
             # Login into Selectel Registry
             docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ env.REGISTRY }}
