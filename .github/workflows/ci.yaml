@@ -68,7 +68,7 @@ jobs:
             TAG_NAME=$(echo $GITHUB_SHA | head -c7)
             
             # Обновляем образ в docker-compose.yml
-            sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPC }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPCE }}:$TAG_NAME|g" docker-compose.yml
+            sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPC }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GRPC }}:$TAG_NAME|g" docker-compose.yml
             
             # Создаем сеть 
             docker network create grpc-network >/dev/null 2>&1 || true
