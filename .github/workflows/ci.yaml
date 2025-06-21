@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+env:
+  IMAGE_NAME: "ci"
+  CONTAINER_NAME: "ci-container"
+  REGISTRY: "docker.io"
+
+jobs:
+  image-build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Registry
+        run: docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} $REGISTRY
+
+      - name: Build and Push Docker Image
+        run: |
+          TAG_NAME=$(echo $GITHUB_SHA | head -c7)
+          docker buildx create --use
+          docker buildx build --no-cache --push --tag $REGISTRY/$IMAGE_NAME:$TAG_NAME -f userDomain/Dockerfile .
+
+            # Stop running container
+            docker stop $CONTAINER_NAME || true
+          
+            # Remove old container
+            docker rm $CONTAINER_NAME || true
+          
+            # Run a new container from a new image
+            docker run -d -p 8080:8080 --name $CONTAINER_NAME -t $REGISTRY/$IMAGE_NAME:$TAG_NAME

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  grpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grpc-server
+    ports:
+      - "50051:50051"
+    networks:
+      - grpc-network
+
+networks:
+  grpc-network:
+    external: true

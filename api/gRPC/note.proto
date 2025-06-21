@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package gRPC;
+
+
+
+option go_package = "weBike/bikeDomain/pkg/gRPC;gRPC";
+
+
+service Bike {
+  rpc GetBikeByUser(GetBikeByUserRequest) returns (GetBikeByUserResponse);
+  rpc CreateBikeByUser(CreateBikeByUserRequest) returns (CreateBikeByUserResponse);
+  rpc UpdateBikeByUser(UpdateBikeByUserRequest) returns (UpdateBikeByUserResponse);
+  rpc DeleteBikeByUser(DeleteBikeByUserRequest) returns (DeleteBikeByUserResponse);
+
+}
+
+message BikeInfo {
+  uint64 bike_id = 1;
+  string model = 2;
+  string color = 3;
+  bool is_work = 4;
+}
+
+
+message GetBikeByUserRequest {
+  uint64 user_id = 1;
+}
+
+message GetBikeByUserResponse {
+  repeated BikeInfo bikes = 1;
+}
+
+
+message CreateBikeByUserRequest {
+  uint64 user_id = 1;
+  string model = 2;
+  string color = 3;
+  bool is_work = 4;
+}
+
+message CreateBikeByUserResponse {
+  uint64 bike_id = 1;
+}
+
+
+message UpdateBikeByUserRequest {
+  uint64 user_id = 1;
+  uint64 bike_id = 2;
+  string model = 3;
+  string color = 4;
+  bool is_work = 5;
+}
+
+message UpdateBikeByUserResponse {
+  bool success = 1;
+}
+
+message DeleteBikeByUserRequest {
+  uint64 user_id = 1;
+  uint64 bike_id = 2;
+}
+
+message DeleteBikeByUserResponse {
+  bool success = 1;
+}
+
