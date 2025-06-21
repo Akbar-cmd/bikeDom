@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: docker.io/akbae/ci-grpc:latest
     container_name: grpc-server
     ports:
       - "50051:50051"
