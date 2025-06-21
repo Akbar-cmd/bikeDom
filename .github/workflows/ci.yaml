@@ -7,7 +7,7 @@ on:
     branches: [ main, dev ]
 
 env:
-  IMAGE_NAME: "akbae/ci"  # Ваше имя образа в Docker Hub
+  IMAGE_NAME_HTTP: "akbae/ci-http"  # Ваше имя образа в Docker Hub
   REGISTRY: "docker.io"    # Реестр Docker Hub
   COMPOSE_PROJECT_NAME: "ci-app"  # Имя проекта Docker Compose
   SSH_DIR: "~/ci-app"      # Директория на сервере
