@@ -14,4 +14,4 @@ services:
 
 networks:
   grpc-network:
-    external: true
+    driver: bridge
