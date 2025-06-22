@@ -202,11 +202,11 @@ func runPrometheus() error {
 	mux.Handle("/metrics", promhttp.Handler())
 
 	prometheusServer := &http.Server{
-		Addr:    "localhost:2112",
+		Addr:    ":2112",
 		Handler: mux,
 	}
 
-	log.Printf("Prometheus server is running on %s", "localhost:2112")
+	log.Printf("Prometheus server is running on %s", ":2112")
 
 	err := prometheusServer.ListenAndServe()
 	if err != nil {
